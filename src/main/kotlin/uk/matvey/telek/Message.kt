@@ -13,6 +13,8 @@ data class Message(
     val date: Int,
     val chat: Chat,
     val text: String? = null,
+    @SerialName("reply_markup")
+    val replyMarkup: ReplyMarkup? = null,
     @SerialName("message_thread_id")
     val threadId: Int? = null,
     val from: User? = null,
@@ -35,7 +37,15 @@ data class Message(
     @SerialName("external_reply")
     val externalReply: ExternalReplyInfo? = null,
     val quote: TextQuote? = null,
+    @SerialName("reply_to_story")
+    val replyToStory: Story? = null,
+    @SerialName("via_bot")
+    val viaBot: User? = null,
+    @SerialName("edit_date")
+    val editDate: Int? = null,
 ) {
+
+    fun text() = requireNotNull(text)
 
     fun from() = requireNotNull(from)
 }

@@ -21,5 +21,13 @@ data class ReplyMarkup(
         val url: String? = null,
         @SerialName("callback_data")
         val callbackData: String? = null,
-    )
+    ) {
+
+        companion object {
+
+            fun url(text: String, url: String) = InlineKeyboardButton(text, url = url)
+
+            fun data(text: String, data: String) = InlineKeyboardButton(text, callbackData = data)
+        }
+    }
 }

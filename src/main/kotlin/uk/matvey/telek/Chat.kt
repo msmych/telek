@@ -14,7 +14,15 @@ data class Chat(
     data class Id(
         val id: Long?,
         val username: String?,
-    )
+    ) {
+
+        companion object {
+
+            fun chatId(id: Long) = Id(id, null)
+
+            fun chatId(username: String) = Id(null, username)
+        }
+    }
 
     enum class Type {
         private,
