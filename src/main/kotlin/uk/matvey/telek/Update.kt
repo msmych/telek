@@ -43,13 +43,18 @@ data class Update(
     @SerialName("poll_answer")
     val pollAnswer: PollAnswer? = null,
     @SerialName("my_chat_member")
-    val myChatMember: ChatMemberUpdated? =null,
+    val myChatMember: ChatMemberUpdated? = null,
     @SerialName("chat_member")
-    val chatMember: ChatMemberUpdated? =null,
+    val chatMember: ChatMemberUpdated? = null,
     @SerialName("chat_join_request")
     val chatJoinRequest: ChatJoinRequest? = null,
     @SerialName("chat_boost")
     val chatBoost: ChatBoostUpdated? = null,
     @SerialName("removed_chat_boost")
     val removedChatBoost: ChatBoostRemoved? = null,
-)
+) {
+
+    fun message() = requireNotNull(message)
+
+    fun callbackQuery() = requireNotNull(callbackQuery)
+}

@@ -34,6 +34,7 @@ data class Message(
     val replyToMessage: Message? = null,
     @SerialName("external_reply")
     val externalReply: ExternalReplyInfo? = null,
+    val quote: TextQuote? = null,
 ) {
 
     fun from() = requireNotNull(from)
