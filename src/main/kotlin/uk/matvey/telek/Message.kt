@@ -11,6 +11,7 @@ data class Message(
     @SerialName("message_id")
     val id: Int,
     val date: Int,
+    val chat: Chat,
     @SerialName("message_thread_id")
     val threadId: Int? = null,
     val from: User? = null,
@@ -20,4 +21,6 @@ data class Message(
     val senderBoostCount: Int? = null,
     @SerialName("sender_business_bot")
     val senderBusinessBot: User? = null,
+    @SerialName("business_connection_id")
+    val businessConnectionId: String? = null,
 )

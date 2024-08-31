@@ -1,3 +1,7 @@
 # Telek
 
-Kotlin Telegram Bot API client
+Kotlin Telegram Bot API client.
+
+## Client
+
+## Bot
