@@ -12,6 +12,7 @@ data class Message(
     val id: Int,
     val date: Int,
     val chat: Chat,
+    val text: String? = null,
     @SerialName("message_thread_id")
     val threadId: Int? = null,
     val from: User? = null,
@@ -31,4 +32,9 @@ data class Message(
     val isAutomaticForward: Boolean? = null,
     @SerialName("reply_to_message")
     val replyToMessage: Message? = null,
-)
+    @SerialName("external_reply")
+    val externalReply: ExternalReplyInfo? = null,
+) {
+
+    fun from() = requireNotNull(from)
+}

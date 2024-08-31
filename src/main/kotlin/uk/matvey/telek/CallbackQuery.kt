@@ -8,4 +8,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class CallbackQuery(
     val id: String,
+    val from: User,
+    val data: String? = null,
 )
