@@ -25,4 +25,10 @@ data class Message(
     val businessConnectionId: String? = null,
     @SerialName("forward_origin")
     val forwardOrigin: MessageOrigin? = null,
+    @SerialName("is_topic_message")
+    val isTopicMessage: Boolean? = null,
+    @SerialName("is_automatic_forward")
+    val isAutomaticForward: Boolean? = null,
+    @SerialName("reply_to_message")
+    val replyToMessage: Message? = null,
 )

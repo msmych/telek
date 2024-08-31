@@ -25,4 +25,3 @@ jobs:
         run: ./gradlew check
         env:
           GH_PACKAGES_RO_TOKEN: ${{ secrets.GH_PACKAGES_RO_TOKEN }}
-          GH_PACKAGES_RW_TOKEN: ${{ secrets.GH_PACKAGES_RW_TOKEN }}
