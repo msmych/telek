@@ -23,4 +23,6 @@ data class Message(
     val senderBusinessBot: User? = null,
     @SerialName("business_connection_id")
     val businessConnectionId: String? = null,
+    @SerialName("forward_origin")
+    val forwardOrigin: MessageOrigin? = null,
 )
