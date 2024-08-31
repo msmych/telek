@@ -10,4 +10,7 @@ import kotlinx.serialization.Serializable
 data class Message(
     @SerialName("message_id")
     val id: Int,
+    @SerialName("message_thread_id")
+    val threadId: Int? = null,
+    val from: User? = null,
 )
