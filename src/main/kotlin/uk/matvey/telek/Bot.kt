@@ -33,9 +33,9 @@ class Bot(
         }
     }
 
-    suspend fun getUpdates(lastUpdate: Update? = null): List<Update> = try {
+    suspend fun getUpdates(confirmUpdate: Update? = null): List<Update> = try {
         client.getUpdates(
-            offset = lastUpdate?.let { it.id + 1 },
+            offset = confirmUpdate?.let { it.id + 1 },
             timeout = longPollingSeconds,
         )
             .mapTo<List<Update>>()
