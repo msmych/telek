@@ -24,4 +24,5 @@ jobs:
       - name: Publish
         run: ./gradlew publish -PreleaseVersion=${{ github.event.inputs.version }}
         env:
+          GH_PACKAGES_RO_TOKEN: ${{ secrets.GH_PACKAGES_RO_TOKEN }}
           GH_PACKAGES_RW_TOKEN: ${{ secrets.GH_PACKAGES_RW_TOKEN }}
