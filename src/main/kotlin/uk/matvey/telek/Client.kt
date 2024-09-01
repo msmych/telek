@@ -80,8 +80,11 @@ class Client(
         return client.post("$baseUrl/sendMessage") {
             setBody(
                 buildJsonObject {
-                    chatId.id?.let { put("chat_id", it) }
-                        ?: put("chat_id", chatId.username)
+                    if (chatId.id != null) {
+                         put("chat_id", chatId.id)
+                    } else {
+                        put("chat_id", chatId.username)
+                    }
                     put("text", text)
                     businessConnectionId?.let { put("business_connection_id", it) }
                     messageThreadId?.let { put("message_thread_id", it) }

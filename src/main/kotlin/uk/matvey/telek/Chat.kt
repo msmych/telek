@@ -16,6 +16,10 @@ data class Chat(
         val username: String?,
     ) {
 
+        init {
+            require((id == null) xor (username == null)) { "Either id or username must be provided" }
+        }
+
         companion object {
 
             fun chatId(id: Long) = Id(id, null)
