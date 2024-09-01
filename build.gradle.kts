@@ -17,11 +17,24 @@ repositories {
     }
 }
 
+subprojects {
+    repositories {
+        mavenCentral()
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/msmych/kit")
+            credentials {
+                username = "telek"
+                password = project.findProperty("ghPackagesRoToken") as? String ?: System.getenv("GH_PACKAGES_RO_TOKEN")
+            }
+        }
+    }
+}
+
 val kitVersion: String by project
 val utkaVersion: String by project
 val assertjVersion: String by project
 val junitVersion: String by project
-val coroutinesVersion: String by project
 
 dependencies {
     implementation("uk.matvey:kit:$kitVersion")
