@@ -40,7 +40,7 @@ class Bot(
             offset = confirmUpdate?.let { it.id + 1 },
             timeout = longPollingSeconds,
         )
-            .mapTo()
+            .parse()
     } catch (e: ConnectTimeoutException) {
         listOf()
     } catch (e: HttpRequestTimeoutException) {
@@ -62,7 +62,7 @@ class Bot(
             parseMode = parseMode,
             replyMarkup = inlineKeyboard?.let(::ReplyMarkup),
         )
-            .mapTo()
+            .parse()
     }
 
     suspend fun editMessage(
@@ -76,8 +76,8 @@ class Bot(
             text = text ?: message.text(),
             replyMarkup = inlineKeyboard?.let(::ReplyMarkup) ?: message.replyMarkup,
         )
-            .mapTo()
+            .parse()
     }
 
-    suspend fun answerCallbackQuery(id: String) = client.answerCallbackQuery(id)
+    suspend fun answerCallbackQuery(id: String): Boolean = client.answerCallbackQuery(id).parse()
 }

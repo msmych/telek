@@ -20,6 +20,7 @@ fun main(args: Array<String>) {
             processUpdate(update, bot)
         }
     }
+    log.info { "Bot started" }
     runBlocking {
         job.join()
     }

@@ -12,7 +12,7 @@ data class Result(
     val description: String? = null,
 ) {
 
-    inline fun <reified T> mapTo(): T {
+    inline fun <reified T> parse(): T {
         if (!ok) {
             throw RequestException(description)
         }

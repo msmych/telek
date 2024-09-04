@@ -43,6 +43,19 @@ data class Message(
     val viaBot: User? = null,
     @SerialName("edit_date")
     val editDate: Int? = null,
+    @SerialName("has_protected_content")
+    val hasProtectedContent: Boolean? = null,
+    @SerialName("is_from_offline")
+    val isFromOffline: Boolean? = null,
+    @SerialName("media_group_id")
+    val mediaGroupId: String? = null,
+    @SerialName("author_signature")
+    val authorSignature: String? = null,
+    val entities: List<MessageEntity>? = null,
+    @SerialName("link_preview_options")
+    val linkPreviewOptions: LinkPreviewOptions? = null,
+    @SerialName("effect_id")
+    val effectId: String? = null,
 ) {
 
     fun text() = requireNotNull(text)
