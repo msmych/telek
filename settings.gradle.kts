@@ -1,5 +1,6 @@
 rootProject.name = "telek"
 
 include(
-    "demo"
+    "apoche",
+    "demo",
 )
