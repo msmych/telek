@@ -9,9 +9,9 @@ private val log = KotlinLogging.logger("processRemoveInlineKeyboardQuery")
 suspend fun processRemoveInlineKeyboardQuery(update: Update, bot: Bot) {
     val callbackQuery = update.callbackQuery()
     val message = callbackQuery.message()
-    bot.editMessage(
+    bot.editMessageInlineKeyboard(
         message = message,
         inlineKeyboard = listOf(listOf()),
-    ).let { log.info { "editMessage: $it" } }
+    ).let { log.info { "editMessageInlineKeyboard: $it" } }
     bot.answerCallbackQuery(callbackQuery.id).let { log.info { "answerCallbackQuery: $it" } }
 }

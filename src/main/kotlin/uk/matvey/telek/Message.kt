@@ -58,6 +58,13 @@ data class Message(
     val effectId: String? = null,
 ) {
 
+    data class Id(
+        val chatId: Chat.Id,
+        val messageId: Int,
+    )
+
+    fun messageId() = Id(chat.chatId(), id)
+
     fun text() = requireNotNull(text)
 
     fun from() = requireNotNull(from)

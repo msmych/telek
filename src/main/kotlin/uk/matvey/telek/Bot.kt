@@ -3,7 +3,6 @@ package uk.matvey.telek
 import io.ktor.client.network.sockets.ConnectTimeoutException
 import io.ktor.client.plugins.HttpRequestTimeoutException
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import uk.matvey.telek.Chat.Id.Companion.chatId
 import uk.matvey.telek.ReplyMarkup.InlineKeyboardButton
@@ -13,9 +12,10 @@ class Bot(
     private val longPollingSeconds: Int = 0,
     private val onUpdatesRetrievalException: (Exception) -> Unit = {},
     private val onUpdateProcessingException: (Exception) -> Unit = {},
+    getUpdatesMinTimeout: Long = 5000,
 ) {
 
-    val client = Client(token)
+    val client = Client(token, getUpdatesMinTimeout)
 
     suspend fun start(block: suspend (Update) -> Unit) = coroutineScope {
         while (isActive) {
@@ -31,7 +31,6 @@ class Bot(
                 ?.let { lastUpdate ->
                     getUpdates(lastUpdate)
                 }
-                ?: delay(100)
         }
     }
 
@@ -55,12 +54,14 @@ class Bot(
         text: String,
         parseMode: ParseMode? = null,
         inlineKeyboard: List<List<InlineKeyboardButton>>? = null,
+        replyTo: Int? = null,
     ): Message {
         return client.sendMessage(
             chatId = chatId(chatId),
             text = text,
             parseMode = parseMode,
             replyMarkup = inlineKeyboard?.let(::ReplyMarkup),
+            replyParameters = replyTo?.let(::ReplyParameters),
         )
             .parse()
     }
@@ -71,10 +72,20 @@ class Bot(
         inlineKeyboard: List<List<InlineKeyboardButton>>? = null,
     ): Message {
         return client.editMessageText(
-            chatId = chatId(message.chat.id),
-            messageId = message.id,
+            messageId = message.messageId(),
             text = text ?: message.text(),
             replyMarkup = inlineKeyboard?.let(::ReplyMarkup) ?: message.replyMarkup,
+        )
+            .parse()
+    }
+
+    suspend fun editMessageInlineKeyboard(
+        message: Message,
+        inlineKeyboard: List<List<InlineKeyboardButton>>,
+    ): Message {
+        return client.editMessageReplyMarkup(
+            messageId = message.messageId(),
+            replyMarkup = ReplyMarkup(inlineKeyboard),
         )
             .parse()
     }

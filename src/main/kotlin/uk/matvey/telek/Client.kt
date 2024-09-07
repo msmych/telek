@@ -14,6 +14,7 @@ import io.ktor.http.ContentType.Application
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.JsonObjectBuilder
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 import uk.matvey.kit.json.JsonKit.JSON
@@ -25,6 +26,7 @@ import uk.matvey.kit.json.JsonKit.jsonObjectSerialize
  */
 class Client(
     token: String,
+    private val getUpdatesMinTimeout: Long = 5000,
 ) {
 
     private val baseUrl = "https://api.telegram.org/bot$token"
@@ -50,7 +52,7 @@ class Client(
     ): Result {
         return client.get("$baseUrl/getUpdates") {
             timeout {
-                requestTimeoutMillis = (1000L * (timeout ?: 0)).coerceAtLeast(5000)
+                requestTimeoutMillis = (1000L * (timeout ?: 0)).coerceAtLeast(getUpdatesMinTimeout)
             }
             offset?.let { url.parameters.append("offset", it.toString()) }
             limit?.let { url.parameters.append("limit", it.toString()) }
@@ -80,11 +82,7 @@ class Client(
         return client.post("$baseUrl/sendMessage") {
             setBody(
                 buildJsonObject {
-                    if (chatId.id != null) {
-                         put("chat_id", chatId.id)
-                    } else {
-                        put("chat_id", chatId.username)
-                    }
+                    putChatId(chatId)
                     put("text", text)
                     businessConnectionId?.let { put("business_connection_id", it) }
                     messageThreadId?.let { put("message_thread_id", it) }
@@ -106,11 +104,10 @@ class Client(
      * [editMessageText](https://core.telegram.org/bots/api#editmessagetext)
      */
     suspend fun editMessageText(
-        chatId: Chat.Id,
-        messageId: Int,
         text: String,
-        businessConnectionId: String? = null,
+        messageId: Message.Id? = null,
         inlineMessageId: Int? = null,
+        businessConnectionId: String? = null,
         parseMode: ParseMode? = null,
         entities: List<MessageEntity>? = null,
         linkPreviewOptions: LinkPreviewOptions? = null,
@@ -119,18 +116,37 @@ class Client(
         return client.post("$baseUrl/editMessageText") {
             setBody(
                 buildJsonObject {
-                    if (chatId.id != null) {
-                        put("chat_id", chatId.id)
-                    } else {
-                        put("chat_id", chatId.username)
-                    }
-                    put("message_id", messageId)
+                    putChatId(messageId?.chatId)
                     put("text", text)
+                    messageId?.let { put("message_id", it.messageId) }
                     businessConnectionId?.let { put("business_connection_id", it) }
                     inlineMessageId?.let { put("inline_message_id", it) }
                     parseMode?.let { put("parse_mode", it.name) }
                     entities?.let { put("entities", jsonArraySerialize(it)) }
                     linkPreviewOptions?.let { put("link_preview_options", jsonObjectSerialize(it)) }
+                    replyMarkup?.let { put("reply_markup", jsonObjectSerialize(it)) }
+                }
+            )
+        }
+            .body()
+    }
+
+    /**
+     * [editMessageReplyMarkup](https://core.telegram.org/bots/api#editmessagereplymarkup)
+     */
+    suspend fun editMessageReplyMarkup(
+        messageId: Message.Id? = null,
+        inlineMessageId: Int? = null,
+        businessConnectionId: String? = null,
+        replyMarkup: ReplyMarkup? = null,
+    ): Result {
+        return client.post("$baseUrl/editMessageReplyMarkup") {
+            setBody(
+                buildJsonObject {
+                    putChatId(messageId?.chatId)
+                    messageId?.let { put("message_id", it.messageId) }
+                    inlineMessageId?.let { put("inline_message_id", it) }
+                    businessConnectionId?.let { put("business_connection_id", it) }
                     replyMarkup?.let { put("reply_markup", jsonObjectSerialize(it)) }
                 }
             )
@@ -160,5 +176,15 @@ class Client(
             )
         }
             .body()
+    }
+
+    private fun JsonObjectBuilder.putChatId(chatId: Chat.Id?) {
+        chatId?.let {
+            if (it.id != null) {
+                put("chat_id", it.id)
+            } else {
+                put("chat_id", it.username)
+            }
+        }
     }
 }

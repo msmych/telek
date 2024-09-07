@@ -28,6 +28,8 @@ data class Chat(
         }
     }
 
+    fun chatId() = Id.chatId(id)
+
     enum class Type {
         private,
         group,
