@@ -12,6 +12,10 @@ suspend fun processUpdate(update: Update, bot: Bot) {
         processStartCommand(update, bot)
         return
     }
+    if (update.message?.text == "/getme") {
+        processGetMeCommand(update, bot)
+        return
+    }
     if (update.message?.text == "/ikb") {
         processIkbCommand(update, bot)
         return

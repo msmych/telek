@@ -63,6 +63,13 @@ class Client(
     }
 
     /**
+     * [getMe](https://core.telegram.org/bots/api#getme)
+     */
+    suspend fun getMe(): Result {
+        return client.get("$baseUrl/getMe").body()
+    }
+
+    /**
      *  [sendMessage](https://core.telegram.org/bots/api#sendmessage)
      */
     suspend fun sendMessage(

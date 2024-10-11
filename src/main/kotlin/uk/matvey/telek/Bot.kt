@@ -40,13 +40,17 @@ class Bot(
             timeout = longPollingSeconds,
         )
             .parse()
-    } catch (e: ConnectTimeoutException) {
+    } catch (_: ConnectTimeoutException) {
         listOf()
-    } catch (e: HttpRequestTimeoutException) {
+    } catch (_: HttpRequestTimeoutException) {
         listOf()
     } catch (e: Exception) {
         onUpdatesRetrievalException(e)
         listOf()
+    }
+
+    suspend fun getMe(): User {
+        return client.getMe().parse()
     }
 
     suspend fun sendMessage(

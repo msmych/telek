@@ -1,6 +1,5 @@
 package uk.matvey.telek
 
-import com.neovisionaries.i18n.LanguageCode
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -18,7 +17,7 @@ data class User(
     val lastName: String? = null,
     val username: String? = null,
     @SerialName("language_code")
-    val languageCode: LanguageCode? = null,
+    val languageCode: String? = null,
     @SerialName("is_premium")
     val isPremium: Boolean? = null,
     @SerialName("added_to_attachment_menu")
