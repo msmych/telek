@@ -18,8 +18,8 @@ import kotlinx.serialization.json.JsonObjectBuilder
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 import uk.matvey.kit.json.JsonKit.JSON
-import uk.matvey.kit.json.JsonKit.jsonArraySerialize
-import uk.matvey.kit.json.JsonKit.jsonObjectSerialize
+import uk.matvey.kit.json.JsonKit.jsonArrayEncode
+import uk.matvey.kit.json.JsonKit.jsonObjectEncode
 
 /**
  *  [Telegram Bots API](https://core.telegram.org/bots/api)
@@ -70,6 +70,13 @@ class Client(
     }
 
     /**
+     * [logOut](https://core.telegram.org/bots/api#logout)
+     */
+    suspend fun logOut(): Result {
+        return client.get("$baseUrl/logOut").body()
+    }
+
+    /**
      *  [sendMessage](https://core.telegram.org/bots/api#sendmessage)
      */
     suspend fun sendMessage(
@@ -94,13 +101,13 @@ class Client(
                     businessConnectionId?.let { put("business_connection_id", it) }
                     messageThreadId?.let { put("message_thread_id", it) }
                     parseMode?.let { put("parse_mode", it.name) }
-                    entities?.let { put("entities", jsonArraySerialize(it)) }
-                    linkPreviewOptions?.let { put("link_preview_options", jsonObjectSerialize(it)) }
+                    entities?.let { put("entities", jsonArrayEncode(it)) }
+                    linkPreviewOptions?.let { put("link_preview_options", jsonObjectEncode(it)) }
                     disableNotification?.let { put("disable_notification", it) }
                     protectContent?.let { put("protect_content", it) }
                     messageEffectId?.let { put("message_effect_id", it) }
-                    replyParameters?.let { put("reply_parameters", jsonObjectSerialize(it)) }
-                    replyMarkup?.let { put("reply_markup", jsonObjectSerialize(it)) }
+                    replyParameters?.let { put("reply_parameters", jsonObjectEncode(it)) }
+                    replyMarkup?.let { put("reply_markup", jsonObjectEncode(it)) }
                 }
             )
         }
@@ -129,9 +136,9 @@ class Client(
                     businessConnectionId?.let { put("business_connection_id", it) }
                     inlineMessageId?.let { put("inline_message_id", it) }
                     parseMode?.let { put("parse_mode", it.name) }
-                    entities?.let { put("entities", jsonArraySerialize(it)) }
-                    linkPreviewOptions?.let { put("link_preview_options", jsonObjectSerialize(it)) }
-                    replyMarkup?.let { put("reply_markup", jsonObjectSerialize(it)) }
+                    entities?.let { put("entities", jsonArrayEncode(it)) }
+                    linkPreviewOptions?.let { put("link_preview_options", jsonObjectEncode(it)) }
+                    replyMarkup?.let { put("reply_markup", jsonObjectEncode(it)) }
                 }
             )
         }
@@ -154,7 +161,7 @@ class Client(
                     messageId?.let { put("message_id", it.messageId) }
                     inlineMessageId?.let { put("inline_message_id", it) }
                     businessConnectionId?.let { put("business_connection_id", it) }
-                    replyMarkup?.let { put("reply_markup", jsonObjectSerialize(it)) }
+                    replyMarkup?.let { put("reply_markup", jsonObjectEncode(it)) }
                 }
             )
         }

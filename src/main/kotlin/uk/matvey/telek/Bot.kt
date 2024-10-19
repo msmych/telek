@@ -53,6 +53,10 @@ class Bot(
         return client.getMe().parse()
     }
 
+    suspend fun logOut(): Boolean {
+        return client.logOut().parse()
+    }
+
     suspend fun sendMessage(
         chatId: Long,
         text: String,

@@ -2,7 +2,7 @@ plugins {
     `maven-publish`
     kotlin("jvm") version "2.0.0"
     kotlin("plugin.serialization") version "2.0.0"
-    id("io.ktor.plugin") version "2.3.12"
+    id("io.ktor.plugin") version "3.0.0"
 }
 
 repositories {
@@ -62,8 +62,8 @@ tasks.test {
     useJUnitPlatform()
 }
 
-tasks.shadowJar {
-    enabled = false
+application {
+    mainClass.set("uk.msmych.telek.AppKt")
 }
 
 publishing {
