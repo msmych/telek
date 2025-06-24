@@ -13,13 +13,11 @@ import io.ktor.client.request.setBody
 import io.ktor.http.ContentType.Application
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
-import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObjectBuilder
 import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.encodeToJsonElement
 import kotlinx.serialization.json.put
-import uk.matvey.kit.json.JsonKit.JSON
-import uk.matvey.kit.json.JsonKit.jsonArrayEncode
-import uk.matvey.kit.json.JsonKit.jsonObjectEncode
 
 /**
  *  [Telegram Bots API](https://core.telegram.org/bots/api)
@@ -34,7 +32,7 @@ class Client(
     private val client = HttpClient(CIO) {
         install(HttpTimeout)
         install(ContentNegotiation) {
-            json(JSON)
+            json(Json)
         }
         install(DefaultRequest) {
             contentType(Application.Json)
@@ -57,7 +55,7 @@ class Client(
             offset?.let { url.parameters.append("offset", it.toString()) }
             limit?.let { url.parameters.append("limit", it.toString()) }
             timeout?.let { url.parameters.append("timeout", it.toString()) }
-            allowedUpdates?.let { url.parameters.append("allowed_updates", JSON.encodeToString(it)) }
+            allowedUpdates?.let { url.parameters.append("allowed_updates", Json.encodeToString(it)) }
         }
             .body()
     }
@@ -101,13 +99,13 @@ class Client(
                     businessConnectionId?.let { put("business_connection_id", it) }
                     messageThreadId?.let { put("message_thread_id", it) }
                     parseMode?.let { put("parse_mode", it.name) }
-                    entities?.let { put("entities", jsonArrayEncode(it)) }
-                    linkPreviewOptions?.let { put("link_preview_options", jsonObjectEncode(it)) }
+                    entities?.let { put("entities", Json.encodeToJsonElement(it)) }
+                    linkPreviewOptions?.let { put("link_preview_options", Json.encodeToJsonElement(it)) }
                     disableNotification?.let { put("disable_notification", it) }
                     protectContent?.let { put("protect_content", it) }
                     messageEffectId?.let { put("message_effect_id", it) }
-                    replyParameters?.let { put("reply_parameters", jsonObjectEncode(it)) }
-                    replyMarkup?.let { put("reply_markup", jsonObjectEncode(it)) }
+                    replyParameters?.let { put("reply_parameters", Json.encodeToJsonElement(it)) }
+                    replyMarkup?.let { put("reply_markup", Json.encodeToJsonElement(it)) }
                 }
             )
         }
@@ -136,9 +134,9 @@ class Client(
                     businessConnectionId?.let { put("business_connection_id", it) }
                     inlineMessageId?.let { put("inline_message_id", it) }
                     parseMode?.let { put("parse_mode", it.name) }
-                    entities?.let { put("entities", jsonArrayEncode(it)) }
-                    linkPreviewOptions?.let { put("link_preview_options", jsonObjectEncode(it)) }
-                    replyMarkup?.let { put("reply_markup", jsonObjectEncode(it)) }
+                    entities?.let { put("entities", Json.encodeToJsonElement(it)) }
+                    linkPreviewOptions?.let { put("link_preview_options", Json.encodeToJsonElement(it)) }
+                    replyMarkup?.let { put("reply_markup", Json.encodeToJsonElement(it)) }
                 }
             )
         }
@@ -161,7 +159,7 @@ class Client(
                     messageId?.let { put("message_id", it.messageId) }
                     inlineMessageId?.let { put("inline_message_id", it) }
                     businessConnectionId?.let { put("business_connection_id", it) }
-                    replyMarkup?.let { put("reply_markup", jsonObjectEncode(it)) }
+                    replyMarkup?.let { put("reply_markup", Json.encodeToJsonElement(it)) }
                 }
             )
         }

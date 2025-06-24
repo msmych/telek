@@ -1,44 +1,23 @@
 plugins {
     `maven-publish`
-    kotlin("jvm") version "2.0.0"
-    kotlin("plugin.serialization") version "2.0.0"
-    id("io.ktor.plugin") version "3.0.0"
+    kotlin("jvm") version "2.2.0"
+    kotlin("plugin.serialization") version "2.2.0"
 }
 
 repositories {
     mavenCentral()
-    maven {
-        name = "GitHubPackages"
-        url = uri("https://maven.pkg.github.com/msmych/kit")
-        credentials {
-            username = "telek"
-            password = project.findProperty("ghPackagesRoToken") as? String ?: System.getenv("GH_PACKAGES_RO_TOKEN")
-        }
-    }
 }
 
-subprojects {
-    repositories {
-        mavenCentral()
-        maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/msmych/kit")
-            credentials {
-                username = "telek"
-                password = project.findProperty("ghPackagesRoToken") as? String ?: System.getenv("GH_PACKAGES_RO_TOKEN")
-            }
-        }
-    }
-}
-
-val kitVersion: String by project
-val utkaVersion: String by project
 val assertjVersion: String by project
 val junitVersion: String by project
+val ktorVersion: String by project
 
 dependencies {
-    implementation("uk.matvey:kit:$kitVersion")
-    implementation("uk.matvey:utka:$utkaVersion")
+    implementation("io.ktor:ktor-client-core:$ktorVersion")
+    implementation("io.ktor:ktor-client-cio:$ktorVersion")
+    implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
 
     testImplementation(platform("org.junit:junit-bom:$junitVersion"))
     testImplementation("org.junit.jupiter:junit-jupiter")
@@ -48,22 +27,18 @@ dependencies {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
     withJavadocJar()
     withSourcesJar()
 }
 
 kotlin {
-    jvmToolchain(21)
+    jvmToolchain(11)
 }
 
 tasks.test {
     useJUnitPlatform()
-}
-
-application {
-    mainClass.set("uk.msmych.telek.AppKt")
 }
 
 publishing {

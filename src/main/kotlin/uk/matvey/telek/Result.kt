@@ -1,9 +1,9 @@
 package uk.matvey.telek
 
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.decodeFromJsonElement
-import uk.matvey.kit.json.JsonKit.JSON
 
 @Serializable
 data class Result(
@@ -16,6 +16,6 @@ data class Result(
         if (!ok) {
             throw RequestException(description)
         }
-        return JSON.decodeFromJsonElement(requireNotNull(result))
+        return Json.decodeFromJsonElement(requireNotNull(result))
     }
 }

@@ -2,8 +2,7 @@ package uk.matvey.telek
 
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
-import uk.matvey.kit.random.RandomKit.randomAlphabetic
-import uk.matvey.kit.random.RandomKit.randomLong
+import kotlin.random.Random
 
 class ChatTest {
 
@@ -13,7 +12,7 @@ class ChatTest {
         assertThatThrownBy { Chat.Id(null, null) }
             .isInstanceOf(IllegalArgumentException::class.java)
             .hasMessage("Either id or username must be provided")
-        assertThatThrownBy { Chat.Id(randomLong(), randomAlphabetic()) }
+        assertThatThrownBy { Chat.Id(Random.nextLong(), Random.nextLong().toString()) }
             .isInstanceOf(IllegalArgumentException::class.java)
             .hasMessage("Either id or username must be provided")
     }
