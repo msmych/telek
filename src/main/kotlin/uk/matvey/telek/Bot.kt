@@ -15,6 +15,7 @@ class Bot(
     private val onUpdatesRetrievalException: (Exception) -> Unit = {},
     private val onUpdateProcessingException: (Exception) -> Unit = {},
     getUpdatesMinTimeout: Long = 5000,
+    private val defaultParseMode: ParseMode? = null,
 ) {
 
     private val json = Json {
@@ -67,13 +68,13 @@ class Bot(
     suspend fun sendMessage(
         chatId: Long,
         text: String,
-        parseMode: ParseMode? = null,
+        parseMode: ParseMode? = defaultParseMode,
         inlineKeyboard: List<List<InlineKeyboardButton>>? = null,
         replyTo: Int? = null,
     ): Message {
         return client.sendMessage(
             chatId = chatId(chatId),
-            text = text,
+            text = sanitizeText(text, parseMode),
             parseMode = parseMode,
             replyMarkup = inlineKeyboard?.let(::ReplyMarkup),
             replyParameters = replyTo?.let(::ReplyParameters),
@@ -84,11 +85,13 @@ class Bot(
     suspend fun editMessage(
         messageId: Message.Id,
         text: String,
+        parseMode: ParseMode? = defaultParseMode,
         inlineKeyboard: List<List<InlineKeyboardButton>>? = null,
     ): Message {
         return client.editMessageText(
             messageId = messageId,
-            text = text,
+            text = sanitizeText(text, parseMode),
+            parseMode = parseMode,
             replyMarkup = inlineKeyboard?.let(::ReplyMarkup),
         )
             .parse()
@@ -112,5 +115,32 @@ class Bot(
             throw RequestException(description)
         }
         return json.decodeFromJsonElement(requireNotNull(result))
+    }
+
+    private fun sanitizeText(text: String, parseMode: ParseMode?): String {
+        return when (parseMode) {
+            // TODO handle edge cases https://core.telegram.org/bots/api#markdownv2-style
+            ParseMode.MarkdownV2 -> text
+                .replace("_", "\\_")
+                .replace("*", "\\*")
+                .replace("[", "\\[")
+                .replace("]", "\\]")
+                .replace("(", "\\(")
+                .replace(")", "\\)")
+                .replace("~", "\\~")
+                .replace("`", "\\`")
+                .replace(">", "\\>")
+                .replace("#", "\\#")
+                .replace("+", "\\+")
+                .replace("-", "\\-")
+                .replace("=", "\\=")
+                .replace("|", "\\|")
+                .replace("{", "\\{")
+                .replace("}", "\\}")
+                .replace(".", "\\.")
+                .replace("!", "\\!")
+            // TODO handle other parse modes
+            else -> text
+        }
     }
 }
