@@ -4,6 +4,8 @@ import io.ktor.client.network.sockets.ConnectTimeoutException
 import io.ktor.client.plugins.HttpRequestTimeoutException
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.isActive
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.decodeFromJsonElement
 import uk.matvey.telek.Chat.Id.Companion.chatId
 import uk.matvey.telek.ReplyMarkup.InlineKeyboardButton
 
@@ -15,7 +17,12 @@ class Bot(
     getUpdatesMinTimeout: Long = 5000,
 ) {
 
-    val client = Client(token, getUpdatesMinTimeout)
+    private val json = Json {
+        ignoreUnknownKeys = true
+        prettyPrint = false
+    }
+
+    val client = Client(token, json, getUpdatesMinTimeout)
 
     suspend fun start(block: suspend (Update) -> Unit) = coroutineScope {
         while (isActive) {
@@ -99,4 +106,11 @@ class Bot(
     }
 
     suspend fun answerCallbackQuery(id: String): Boolean = client.answerCallbackQuery(id).parse()
+
+    private inline fun <reified T> Result.parse(): T {
+        if (!ok) {
+            throw RequestException(description)
+        }
+        return json.decodeFromJsonElement(requireNotNull(result))
+    }
 }

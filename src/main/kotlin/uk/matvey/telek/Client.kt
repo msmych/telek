@@ -24,15 +24,11 @@ import kotlinx.serialization.json.put
  */
 class Client(
     token: String,
+    private val json: Json,
     private val getUpdatesMinTimeout: Long = 5000,
 ) {
 
     private val baseUrl = "https://api.telegram.org/bot$token"
-
-    private val json = Json {
-        ignoreUnknownKeys = true
-        prettyPrint = false
-    }
 
     private val client = HttpClient(CIO) {
         install(HttpTimeout)
