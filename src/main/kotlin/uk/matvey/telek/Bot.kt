@@ -82,24 +82,24 @@ class Bot(
     }
 
     suspend fun editMessage(
-        message: Message,
-        text: String? = null,
+        messageId: Message.Id,
+        text: String,
         inlineKeyboard: List<List<InlineKeyboardButton>>? = null,
     ): Message {
         return client.editMessageText(
-            messageId = message.messageId(),
-            text = text ?: message.text(),
-            replyMarkup = inlineKeyboard?.let(::ReplyMarkup) ?: message.replyMarkup,
+            messageId = messageId,
+            text = text,
+            replyMarkup = inlineKeyboard?.let(::ReplyMarkup),
         )
             .parse()
     }
 
     suspend fun editMessageInlineKeyboard(
-        message: Message,
+        messageId: Message.Id,
         inlineKeyboard: List<List<InlineKeyboardButton>>,
     ): Message {
         return client.editMessageReplyMarkup(
-            messageId = message.messageId(),
+            messageId = messageId,
             replyMarkup = ReplyMarkup(inlineKeyboard),
         )
             .parse()
