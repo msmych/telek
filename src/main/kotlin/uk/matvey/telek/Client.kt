@@ -29,10 +29,15 @@ class Client(
 
     private val baseUrl = "https://api.telegram.org/bot$token"
 
+    private val json = Json {
+        ignoreUnknownKeys = true
+        prettyPrint = false
+    }
+
     private val client = HttpClient(CIO) {
         install(HttpTimeout)
         install(ContentNegotiation) {
-            json(Json)
+            json(json)
         }
         install(DefaultRequest) {
             contentType(Application.Json)
@@ -55,7 +60,7 @@ class Client(
             offset?.let { url.parameters.append("offset", it.toString()) }
             limit?.let { url.parameters.append("limit", it.toString()) }
             timeout?.let { url.parameters.append("timeout", it.toString()) }
-            allowedUpdates?.let { url.parameters.append("allowed_updates", Json.encodeToString(it)) }
+            allowedUpdates?.let { url.parameters.append("allowed_updates", json.encodeToString(it)) }
         }
             .body()
     }
@@ -99,13 +104,13 @@ class Client(
                     businessConnectionId?.let { put("business_connection_id", it) }
                     messageThreadId?.let { put("message_thread_id", it) }
                     parseMode?.let { put("parse_mode", it.name) }
-                    entities?.let { put("entities", Json.encodeToJsonElement(it)) }
-                    linkPreviewOptions?.let { put("link_preview_options", Json.encodeToJsonElement(it)) }
+                    entities?.let { put("entities", json.encodeToJsonElement(it)) }
+                    linkPreviewOptions?.let { put("link_preview_options", json.encodeToJsonElement(it)) }
                     disableNotification?.let { put("disable_notification", it) }
                     protectContent?.let { put("protect_content", it) }
                     messageEffectId?.let { put("message_effect_id", it) }
-                    replyParameters?.let { put("reply_parameters", Json.encodeToJsonElement(it)) }
-                    replyMarkup?.let { put("reply_markup", Json.encodeToJsonElement(it)) }
+                    replyParameters?.let { put("reply_parameters", json.encodeToJsonElement(it)) }
+                    replyMarkup?.let { put("reply_markup", json.encodeToJsonElement(it)) }
                 }
             )
         }
@@ -134,9 +139,9 @@ class Client(
                     businessConnectionId?.let { put("business_connection_id", it) }
                     inlineMessageId?.let { put("inline_message_id", it) }
                     parseMode?.let { put("parse_mode", it.name) }
-                    entities?.let { put("entities", Json.encodeToJsonElement(it)) }
-                    linkPreviewOptions?.let { put("link_preview_options", Json.encodeToJsonElement(it)) }
-                    replyMarkup?.let { put("reply_markup", Json.encodeToJsonElement(it)) }
+                    entities?.let { put("entities", json.encodeToJsonElement(it)) }
+                    linkPreviewOptions?.let { put("link_preview_options", json.encodeToJsonElement(it)) }
+                    replyMarkup?.let { put("reply_markup", json.encodeToJsonElement(it)) }
                 }
             )
         }
@@ -159,7 +164,7 @@ class Client(
                     messageId?.let { put("message_id", it.messageId) }
                     inlineMessageId?.let { put("inline_message_id", it) }
                     businessConnectionId?.let { put("business_connection_id", it) }
-                    replyMarkup?.let { put("reply_markup", Json.encodeToJsonElement(it)) }
+                    replyMarkup?.let { put("reply_markup", json.encodeToJsonElement(it)) }
                 }
             )
         }
